@@ -11,9 +11,7 @@ export default async function handler(req, res) {
     const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 
     if (!RAPIDAPI_KEY) {
-      return res.status(400).json({
-        error: "Missing RAPIDAPI_KEY in .env.local"
-      });
+      return res.status(500).json({ error: "Missing RAPIDAPI_KEY" });
     }
 
     const response = await axios.get(
@@ -29,7 +27,7 @@ export default async function handler(req, res) {
 
     const data = response.data;
 
-    if (!data || !data.status || !data.result || data.result.length === 0) {
+    if (!data.status || !data.result || data.result.length === 0) {
       return res.status(400).json({
         error: "Unable to fetch video from Instagram"
       });
@@ -50,8 +48,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("API ERROR:", error.response?.data || error.message);
-    return res.status(500).json({
-      error: "Server error"
-    });
+    return res.status(500).json({ error: "Server error" });
   }
 }
